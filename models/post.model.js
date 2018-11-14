@@ -31,6 +31,12 @@ function insertPost(newPost) {
             updatedAt: helper.newDate()
         } 
         newPost = { ...id, ...date, ...newPost }
+        
+        let survey = newPost.survey
+        for (let i = 0; i < survey.length; i++) {
+            survey[i].updatedAt = helper.newDate()
+            survey[i].question_id = newPost.id + ((i+1)/100)
+        }
         posts.push(newPost)
         helper.writeJSONFile(filename, posts)
         resolve(newPost)
@@ -48,6 +54,9 @@ function updatePost(id, newPost) {
                 updatedAt: helper.newDate()
             } 
             posts[index] = { ...id, ...date, ...newPost }
+            let survey = posts[index].survey
+            for (let i = 0; i < survey.length; i++)
+                survey[i].updatedAt = helper.newDate()
             helper.writeJSONFile(filename, posts)
             resolve(posts[index])
         })
