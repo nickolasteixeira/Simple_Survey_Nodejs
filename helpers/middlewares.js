@@ -24,9 +24,6 @@ function isValidObject(obj, res) {
     /* Check if question length is longer than 10 and answer length should be 0 */ 
     if (obj.question instanceof String || obj.question.length < 10)
         res.status(400).json({message: 'A valid question should be a string type and longer than 10 character'})
-    if (obj.answer instanceof String || obj.answer.length !== 0)
-        res.status(400).json({message: 'When creating a survey, the answer should be a string type and be blank. Ex:{"question":"Why do you consume cannabis?", "answer": ""}'})
-    return true
 }
 
 
@@ -34,7 +31,6 @@ function checkParameters(req, res) {
     const { title, tags, survey } = req.body
     if (!(title && tags && survey))
         res.status(400).json({ message: 'Need to have a dictionary with keys => title, tags and survey' })
-    return true
 }
 
 function tagSurveyIsArray(req, res) {
@@ -46,26 +42,46 @@ function tagSurveyIsArray(req, res) {
         res.status(400).json({message: 'The key "survey" needs to have a value of an array with object type items'})
     if (Array.isArray(survey) && survey.length === 0)
         res.status(400).json({message: 'They survey value should not be an empty array'})
-    return true
 }
 
+function checkCreateAnswer(req, res, next) {
+    let survey = req.body.survey
+    for (let i = 0; i < survey.length; i++) {
+        if (survey[i].answer instanceof String || survey[i].answer.length !== 0)
+            res.status(400).json({message: 'When creating a survey, the answer should be a string type and be blank. ex:{"question":"Do you consume cannabis?", "answer": ""}'})
+    }
+    next()
+}
 
+function checkUpdateAnswer(req, res, next) {
+    let survey = req.body.survey
+    for (let i = 0; i < survey.length; i++) {
+        if (typeof survey[i].answer !== typeof true || typeof survey[i].answer !== typeof false)
+            res.status(400).json({message: 'When answering a survey, the answer should be a boolean of true or false. ex:{"question":"Do you consume cannabis?", "answer": true}'})
+    }
+    next()
+}
 
-function checkFieldsPost(req, res, next) {
+function checkPost(req, res, next) {
     const { title, tags, survey } = req.body
 
     checks = [checkParameters, tagSurveyIsArray]
-    
+
     for (let i = 0; i < checks.length; i++)
         checks[i](req, res)
-    
+
     for (let i = 0; i < survey.length; i++)
         isValidObject(survey[i], res) 
-    
+
     next()
 }
 
 module.exports = {
     mustBeInteger,
-    checkFieldsPost
+    checkPost,
+    checkCreateAnswer,
+    checkUpdateAnswer,
+    tagSurveyIsArray,
+    checkParameters,
+    isValidObject
 }
