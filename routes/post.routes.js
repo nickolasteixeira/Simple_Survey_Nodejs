@@ -3,7 +3,7 @@ const router = express.Router()
 const post = require('../models/post.model')
 const m = require('../helpers/middlewares')
 
-/* All posts */
+/* All surveys */
 router.get('/', async (req, res) => {
     await post.getPosts()
     .then(posts => res.json(posts))
@@ -16,7 +16,7 @@ router.get('/', async (req, res) => {
     })
 })
 
-/* A post by id */
+/* A survey by id */
 router.get('/:id', m.mustBeInteger, async (req, res) => {
     const id = req.params.id
 
@@ -31,8 +31,8 @@ router.get('/:id', m.mustBeInteger, async (req, res) => {
     })
 })
 
-/* Insert a new post */
-router.post('/', m.checkFieldsPost, async (req, res) => {
+/* Insert a new survey */
+router.post('/', m.checkPost, m.checkCreateAnswer, async (req, res) => {
     await post.insertPost(req.body)
     .then(post => res.status(201).json({
         message: `The post #${post.id} has been created`,
@@ -41,8 +41,8 @@ router.post('/', m.checkFieldsPost, async (req, res) => {
     .catch(err => res.status(500).json({ message: err.message }))
 })
 
-/* Update a post */
-router.put('/:id', m.mustBeInteger, m.checkFieldsPost, async (req, res) => {
+/* Take a survey by id */
+router.put('/:id', m.mustBeInteger, m.checkPost, m.checkUpdateAnswer, async (req, res) => {
     const id = req.params.id
 
     await post.updatePost(id, req.body)
