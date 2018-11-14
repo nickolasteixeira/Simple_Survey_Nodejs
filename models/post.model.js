@@ -2,6 +2,7 @@ let posts = require('../data/posts.json')
 const filename = './data/posts.json'
 const helper = require('../helpers/helper.js')
 
+/* Gets all posts in the data/posts.json file */
 function getPosts() {
     return new Promise((resolve, reject) => {
         if (posts.length === 0) {
@@ -15,6 +16,7 @@ function getPosts() {
     })
 }
 
+/* Get post in the data/posts.json file based on id */
 function getPost(id) {
     return new Promise((resolve, reject) => {
         helper.mustBeInArray(posts, id)
@@ -23,6 +25,7 @@ function getPost(id) {
     })
 }
 
+/* inserts a new post to the data/posts.json file */
 function insertPost(newPost) {
     return new Promise((resolve, reject) => {
         const id = { id: helper.getNewId(posts) }
@@ -33,6 +36,7 @@ function insertPost(newPost) {
         newPost = { ...id, ...date, ...newPost }
         
         let survey = newPost.survey
+        /* adds a new question_id and updated at key for each question */
         for (let i = 0; i < survey.length; i++) {
             survey[i].updatedAt = helper.newDate()
             survey[i].question_id = newPost.id + ((i+1)/100)
@@ -43,6 +47,7 @@ function insertPost(newPost) {
     })
 }
 
+/* updates a new post to the data/posts.json file */
 function updatePost(id, newPost) {
     return new Promise((resolve, reject) => {
         helper.mustBeInArray(posts, id)
@@ -55,6 +60,7 @@ function updatePost(id, newPost) {
             } 
             posts[index] = { ...id, ...date, ...newPost }
             let survey = posts[index].survey
+            /* updates a new question_id and updated at key for each question */
             for (let i = 0; i < survey.length; i++)
                 survey[i].updatedAt = helper.newDate()
             helper.writeJSONFile(filename, posts)
@@ -64,6 +70,7 @@ function updatePost(id, newPost) {
     })
 }
 
+/* deletes a new post to the data/posts.json file */
 function deletePost(id) {
     return new Promise((resolve, reject) => {
         helper.mustBeInArray(posts, id)

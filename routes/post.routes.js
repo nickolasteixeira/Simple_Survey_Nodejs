@@ -58,7 +58,7 @@ router.put('/:id', m.mustBeInteger, m.checkPost, m.checkUpdateAnswer, async (req
     })
 })
 
-/* Delete a post */
+/* Delete a survey by id */
 router.delete('/:id', m.mustBeInteger, async (req, res) => {
     const id = req.params.id
 
