@@ -14,7 +14,7 @@ function isValidObject(obj, res) {
         res.status(400).json({message: 'Each item in the survey needs to be an object type' })
 
     /* Check for key length to be 2 */   
-    if (Object.keys(obj).length !== 2)
+    if (Object.keys(obj).length < 2)
         res.status(400).json({message: 'You need to pass two keys into each object <question> and <answer>'})
  
     /* Check for only question and answer keys in object */
