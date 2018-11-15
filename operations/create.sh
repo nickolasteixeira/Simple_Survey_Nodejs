@@ -39,27 +39,27 @@ function addTags {
 }
 
 function postSurvey {
-	STRING="-d 'Content-Type: applicaton/json' -d {'title': '$title'}, 'survey':["
+	STRING="-H \"Content-Type: application/json\" -d '{\"title\": \""$title"\", \"survey\":["
 	qLen="${#QUESTIONS[@]}"
 	for (( i=0; i < "${qLen}" - 1; i++));
 	do
-		STRING="$STRING {'question':'"${QUESTIONS[$i]}"', 'answer':''}, "
+		STRING="$STRING {\"question\":"\"${QUESTIONS[$i]}"\", \"answer\":\"\"}, "
 	done
 	echo "${QUESTIONS[-1]}"
-	STRING="$STRING {'question':'"${QUESTIONS[-1]}"', 'answer':''}] "
+	STRING="$STRING {\"question\":\""${QUESTIONS[-1]}\"",\"answer\":\"\"}]"
 
 	tLen="${#TAGS[@]}"
 	if (("${tLen}" > 0 )); then
-		STRING="$STRING , 'tags': ["
+		STRING="$STRING , \"tags\": ["
 		for (( j=0; j < "${tLen}" - 1; j++));
 		do
-			STRING="$STRING '${TAGS[$j]}', "
+			STRING="$STRING \""${TAGS[$j]}"\", "
 		done
-		STRING="$STRING '"${TAGS[-1]}"']}"
+		STRING="$STRING \""${TAGS[-1]}"\"]}'"
 	else
-		STRING="$STRING }"
+		STRING="$STRING }'"
 	fi
-	curl -i -X POST "$STRING" http://localhost:1337/api/v1/posts
+	echo curl -i -X POST "$STRING" http://localhost:1337/api/v1/posts
 	echo "Survey Posted!"
 }
 
