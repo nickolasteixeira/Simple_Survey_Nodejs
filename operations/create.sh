@@ -8,34 +8,32 @@ function getTitle {
 
 function getQuestions {
 	QUESTIONS=()
-	echo "-- How many questions would you like to add? --"
+	echo "-- How many questions would you like to add? (5 questions max please)--"
 	read number
+	if [ "$number" -lt 1 ]; then
+		 echo "Must be a positive number of questions"; exit 1;
+	fi
 	for i in `seq 1 $number`;
 	do
-		echo "--'$i'. What question would you like to add? --"
+		echo
+		echo ""$i". What question would you like to add? (Yes/No questions and a 10 character minimum please)"
 		read question
 		QUESTIONS+=("$question")
 	done
 }
 
 function addTags {
-	echo "-- Would you like to add tags to this survey? (y/n) --"
-	read answertags
-	echo "$answertags"
-	if (("$answertags" == "y" )); then
-		TAGS=()
-		echo "- How many tags would you like to add? -"
-		read ntags
-		for i in `seq 1 $ntags`;
-		do
-			echo "--'$i'. What tag would you like to add? --"
-			read tag
-			TAGS+=("$tag")
-		done
-		
-	else
-		echo "No tags added"
-	fi
+	echo
+	TAGS=()
+	echo "-- How many tags would you like to add? (5 tags max please)--"
+	read ntags
+	for i in `seq 1 $ntags`;
+	do
+		echo
+		echo "$i. What tag would you like to add?"
+		read tag
+		TAGS+=("$tag")
+	done
 }
 
 function postSurvey {
@@ -45,22 +43,27 @@ function postSurvey {
 	do
 		STRING="$STRING {\"question\":"\"${QUESTIONS[$i]}"\", \"answer\":\"\"}, "
 	done
-	echo "${QUESTIONS[-1]}"
 	STRING="$STRING {\"question\":\""${QUESTIONS[-1]}\"",\"answer\":\"\"}]"
 
 	tLen="${#TAGS[@]}"
-	if (("${tLen}" > 0 )); then
-		STRING="$STRING , \"tags\": ["
-		for (( j=0; j < "${tLen}" - 1; j++));
-		do
-			STRING="$STRING \""${TAGS[$j]}"\", "
-		done
-		STRING="$STRING \""${TAGS[-1]}"\"]}'"
+	STRING="$STRING , \"tags\": ["
+	for (( j=0; j < "${tLen}" - 1; j++));
+	do
+		STRING="$STRING \""${TAGS[$j]}"\", "
+	done
+	if [ "$tLen" -eq 0 ];then
+		STRING="$STRING \"\"]}'"
 	else
-		STRING="$STRING }'"
+		STRING="$STRING \""${TAGS[-1]}"\"]}'"
 	fi
+	echo
+	echo " ------------------------- ** ---------------------------------"
+	echo "Copy and past code below into your terminal to create the survey"
+	echo
+	echo
 	echo curl -i -X POST "$STRING" http://localhost:1337/api/v1/posts
-	echo "Survey Posted!"
+	echo " ------------------------- ** ---------------------------------"
+	echo
 }
 
 
@@ -71,13 +74,17 @@ echo "-------------------- ** --------------------"
 echo
 echo "Would you like to create a survey? (y/n)"
 read answer
-if (( "$answer" == "y" )); then
-	echo "Great! Surveys consist of a title, questions and answers."
+if [ "$answer" = "Y" ] || [ "$answer" = "y" ]; then
+	echo
+	echo "---------------------------- ** ----------------------------"
+	echo "  Great! Surveys consist of a title, questions and answers. "
+	echo "---------------------------- ** ----------------------------"
 	getTitle
 	getQuestions
 	addTags
 	postSurvey
+elif [ "$answer" = "N" ] || [ "$answer" = "n" ]; then
+	echo "Goodbye."
 else
 	echo "Goodbye."
 fi
-
