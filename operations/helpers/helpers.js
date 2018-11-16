@@ -6,7 +6,6 @@ Module that helps factilitate all the operations necessary to show and update su
 const fetch = require('node-fetch')
 const readlineSync = require('readline-sync')
 
-
 /* -------------------- showall helper functions --------------------- */
 
 /**
@@ -138,7 +137,9 @@ function listAllSurveys(post) {
 }
 
 
-/* ---------------------------- take survey ------------------------ */
+/* ---------------------------- take survey functions ------------------------ */
+
+
 
 /**
   * @desc transformSurvey - take in an array of survey objects and updates each survey object
@@ -167,14 +168,14 @@ function transformSurvey(post) {
   * @return - N/A
 */
 function checkStatus(res) {
-    if (res.status === 200) {
+    if (res.status === 200 ) {
         process.stdout.write('\n\n')
         console.log('-------------------- ** ----------------------------')
         console.log('            Survey succesfully saved                ')
         console.log('-------------------- ** ----------------------------')
         process.stdout.write('\n\n')
     } else {
-        console.log(response.statusText)
+        console.log(res.message)
     }
 }
 
@@ -183,7 +184,7 @@ function checkStatus(res) {
   * @param post $post - survey array with all survey objects
   * @return - N/A
 */
-function postSurvey(post) {
+function putSurvey(post) {
     return new Promise((resolve, reject) => {
         let id = post.id
         let url = 'http://localhost:1337/api/v1/posts/' + id
@@ -195,6 +196,7 @@ function postSurvey(post) {
         fetch(url, params)
             .then(checkStatus)
             .catch((err) => reject(err))
+        resolve(post)
     })
 }
 
@@ -203,7 +205,7 @@ function postSurvey(post) {
   * @param - N/A
   * @return - N/A
 */
-function displayPrompt() {
+function displayUpdatePrompt() {
     console.log('-------------------- ** ----------------------------')
     let survey_id = readlineSync.question('Please enter the Survey ID number.\nSurvey ID: ')
     console.log('-------------------- ** ----------------------------')
@@ -217,8 +219,129 @@ function displayPrompt() {
 
     getSurveyById(survey_id)
     .then(post => transformSurvey(post))
-    .then(post => postSurvey(post))
+    .then(post => putSurvey(post))
     .catch(err => console.log(err))
+}
+
+
+/* ------------------------------ createsurvey functions ----------------------- */
+
+/**
+  * @desc displayCreatePrompt - displays prompt for users to interact with. Creates a new survey
+  * @param - N/A
+  * @return - N/A
+*/
+async function displayCreatePrompt() {
+    console.log('-------------------- ** ----------------------------')
+    let answer = readlineSync.question('Would you like to Create a survey? (y/n): ')
+    console.log('-------------------- ** ----------------------------')
+    process.stdout.write('\n\n')
+
+    if (answer === 'y') {
+        await askTitle()
+        .then(post => askQuestions(post))
+        .then(post => askTags(post))
+        .then(post => postSurvey(post))
+        .catch(err => console.log(err))
+    }
+    else {
+        console.log('Good bye')
+    }
+}
+
+/**
+  * @desc postSurvey - posts a new survey to the API
+  * @param - array $post - an array of title, survey an tags with values
+  * @return - array $post 
+*/
+function postSurvey(post) {
+    return new Promise((resolve, reject) => {  
+        let body = {'title': post[0], 'survey': post[1], 'tags': post[2]}
+        let url = 'http://localhost:1337/api/v1/posts'
+        let params = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        }
+        fetch(url, params)
+            .then(res => res.json())
+            .then(checkStatus)
+            .catch((err) => reject(err))
+        resolve(post)
+    })
+}
+
+/**
+  * @desc askTitle - gets a title from the user
+  * @param - string $post - a string with the title
+  * @return - array $post - an array with the title 
+*/
+function askTitle(post) {
+    return new Promise((resolve, reject) => {
+        let title = ''
+        title += readlineSync.question('What is the title of your survey?: ')
+        resolve([post])
+    })
+}
+
+/**
+  * @desc askTags - get the tags from the user
+  * @param - array $post - an array with the title, questions
+  * @return - array $post - an array with the title, questions, and tags
+*/
+function askTags(post) {
+    return new Promise((resolve, reject) => {
+        let tags = []
+        let numTags = readlineSync.question('How many tags would you like? (max 5): ')
+        numTags = parseInt(numTags, 10)
+        if (typeof(numTags) !== 'number' || numTags < 1 || numTags > 5) {
+            reject('Invalid number of tags')
+            return
+        }
+        for (let j = 0; j < numTags; j++) {
+            let tagQuestion = readlineSync.question(`${j+1}. What tag would you like to add?)\n--> `)
+            tags.push(tagQuestion)
+        }
+        
+        post.push(tags)
+        resolve(post)
+    })
+}
+
+/**
+  * @desc askQuestions - get the questions from the users
+  * @param - array $post - an array with the title
+  * @return - array $post - an array with the title, questions
+*/
+function askQuestions(post) {
+    return new Promise((resolve, reject) => {
+        let allQuestions = []
+        let numQuestions = readlineSync.question('How many questions would you like? (max 5): ')
+        numQuestions = parseInt(numQuestions, 10)
+        if (typeof(numQuestions) !== 'number' || numQuestions <= 0 || numQuestions > 5) {
+            reject('Invalid number of questions')
+            return
+        }
+        for (let i = 0; i < numQuestions; i++) {
+            let obj = {}
+            let question = readlineSync.question(`\n${i+1}. What question would you like to add?\n(Min 10 characters)\n(Must be yes or no question)\n--> `)
+            if (question.length < 10) {
+                console.log('---------------> Your question was not added')
+            }
+            else {
+                obj.question = question
+                obj.answer = ''
+                allQuestions.push(obj)
+            }
+        } 
+        if (allQuestions.length < 1)
+            reject('No questions were added')
+        post.push(allQuestions)
+        resolve(post)
+    })  
 }
 
 module.exports = {
@@ -231,5 +354,8 @@ module.exports = {
     transformSurvey,
     checkStatus,
     postSurvey,
-    displayPrompt
+    displayUpdatePrompt,
+    displayCreatePrompt,
+    askQuestions,
+    putSurvey
 }
