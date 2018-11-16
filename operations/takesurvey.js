@@ -16,7 +16,7 @@ async function askForSurvey() {
     .catch(err => console.log(err))
    
     /* displays prompt to get surveys */
-    await helper.displayPrompt()
+    await helper.displayUpdatePrompt()
 }
 
 askForSurvey()
