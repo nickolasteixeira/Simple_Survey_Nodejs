@@ -1,4 +1,13 @@
+/*
+Module that is full of helper functions for API calls
+Ex: Parameter checkers before sending to calls
+*/
 
+/**
+  * @desc mustBeInteger - pings the application's api to retrieve all surveys
+  * @param - N/A
+  * @return - json object - object with all surveys in an array
+*/
 function mustBeInteger(req, res, next) {
     const id = req.params.id
 
@@ -8,6 +17,13 @@ function mustBeInteger(req, res, next) {
         next()
 }
 
+
+
+/**
+  * @desc isValidObject - checks object if its a valid object to updated to the File Storage
+  * @param - json object $obj, json object $res - object to check, response object
+  * @return - N/A
+*/
 function isValidObject(obj, res) {
     /* Checking if its an object type  */
     if (!(obj && typeof(obj) === 'object')) 
@@ -27,12 +43,22 @@ function isValidObject(obj, res) {
 }
 
 
+/**
+  * @desc checkParameters - checks all valid keys in object being passed (title, survey, tags)
+  * @param - json object $req, json object $res - reqeust object being passed, response object
+  * @return - N/A
+*/
 function checkParameters(req, res) {
     const { title, tags, survey } = req.body
     if (!(title && tags && survey))
         res.status(400).json({ message: 'Need to have a dictionary with keys => title, tags and survey' })
 }
 
+/**
+  * @desc tagSurveyIsArray - checks for valid types in tags and survey
+  * @param - json object $req, json object $res - reqeust object being passed, response object
+  * @return - N/A
+*/
 function tagSurveyIsArray(req, res) {
     /* checks for tags and survey to both be of an array type, survey should also not be empty */
     const { title, tags, survey } = req.body
@@ -44,6 +70,11 @@ function tagSurveyIsArray(req, res) {
         res.status(400).json({message: 'They survey value should not be an empty array'})
 }
 
+/**
+  * @desc checkCreateAnswer - checks for valid types in all survey array
+  * @param - json object $req, json object $res, object $next - reqeust object being passed, response object, next object
+  * @return - N/A
+*/
 function checkCreateAnswer(req, res, next) {
     let survey = req.body.survey
     for (let i = 0; i < survey.length; i++) {
@@ -53,6 +84,11 @@ function checkCreateAnswer(req, res, next) {
     next()
 }
 
+/**
+  * @desc checkUpdateAnswer - checks for valid types in all survey array
+  * @param - json object $req, json object $res, object $next - reqeust object being passed, response object, next object
+  * @return - N/A
+*/
 function checkUpdateAnswer(req, res, next) {
     let survey = req.body.survey
     for (let i = 0; i < survey.length; i++) {
@@ -62,6 +98,11 @@ function checkUpdateAnswer(req, res, next) {
     next()
 }
 
+/**
+  * @desc checkPost - main function that sets off all the checks for valid objects for API calls
+  * @param - json object $req, json object $res, object $next - reqeust object being passed, response object, next object
+  * @return - N/A
+*/
 function checkPost(req, res, next) {
     const { title, tags, survey } = req.body
 

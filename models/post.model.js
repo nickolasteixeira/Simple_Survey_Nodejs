@@ -1,8 +1,17 @@
+/*
+Module that abstracts API CRUD operations from the route
+*/
 let posts = require('../data/posts.json')
+
 const filename = './data/posts.json'
 const helper = require('../helpers/helper.js')
 
-/* Gets all posts in the data/posts.json file */
+
+/**
+  * @desc getPosts - Gets all posts in the data/posts.json file
+  * @param - N/A
+  * @return - json object - object with all surveys in an array
+*/
 function getPosts() {
     return new Promise((resolve, reject) => {
         if (posts.length === 0) {
@@ -16,7 +25,11 @@ function getPosts() {
     })
 }
 
-/* Get post in the data/posts.json file based on id */
+/**
+  * @desc getPost - Get post in the data/posts.json file based on id
+  * @param - string $id - id of the survey object 
+  * @return - json object - object with the survey id matching id passed into the function
+*/
 function getPost(id) {
     return new Promise((resolve, reject) => {
         helper.mustBeInArray(posts, id)
@@ -25,7 +38,11 @@ function getPost(id) {
     })
 }
 
-/* inserts a new post to the data/posts.json file */
+/**
+  * @desc insertPost - inserts a new post to the data/posts.json file with updated object
+  * @param - json object $newPost -  json object received from api POST call
+  * @return - json object - newly updated object with new keys (id, dates, surveyid)
+*/
 function insertPost(newPost) {
     return new Promise((resolve, reject) => {
         const id = { id: helper.getNewId(posts) }
@@ -47,7 +64,11 @@ function insertPost(newPost) {
     })
 }
 
-/* updates a new post to the data/posts.json file */
+/**
+  * @desc updatePost - updates a new post to the data/posts.json file
+  * @param - string $id, json object $newPost- json object received from api PUT call
+  * @return - json object - newly updated object with new keys (id, dates, surveyid)
+*/
 function updatePost(id, newPost) {
     return new Promise((resolve, reject) => {
         helper.mustBeInArray(posts, id)
@@ -70,7 +91,12 @@ function updatePost(id, newPost) {
     })
 }
 
-/* deletes a new post to the data/posts.json file */
+/**
+  * @desc deletePost - deletes a new post to the data/posts.json file
+  * @param - string $id -  json object received from api DELETE call
+  * @return - N/A
+*/
+
 function deletePost(id) {
     return new Promise((resolve, reject) => {
         helper.mustBeInArray(posts, id)

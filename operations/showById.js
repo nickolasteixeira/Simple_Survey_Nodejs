@@ -1,18 +1,25 @@
 #!/usr/bin/nodejs
-
+/*
+Module that shows all surveys by and Id from ../data/post.json
+*/
 const fetch = require('node-fetch')
 const readlineSync = require('readline-sync')
 const helper = require('./helpers/helpers')
 
-async function main() {
+/**
+  * @desc showSurveyById - shows all surveys by id
+  * @param - N/A
+  * @return - N/A
+*/
+async function showSurveyById() {
     await helper.getAllSurveys()
     .then(post => helper.listAllSurveys(post))
     .catch(err => console.log(err))
 
     await helper.askForSurvey()
     .then(id => helper.getSurveyById(id))
-    .then(post => helper.printSurveys(post))
+    .then(post => helper.printSurvey(post))
     .catch(err => console.log(err))
 }
 
-main()
+showSurveyById()

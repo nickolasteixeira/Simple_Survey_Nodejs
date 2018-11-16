@@ -1,3 +1,7 @@
+/*
+Module that provides routes for Express API
+*/
+
 const express = require('express')
 const router = express.Router()
 const post = require('../models/post.model')
