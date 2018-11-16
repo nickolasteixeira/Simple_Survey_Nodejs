@@ -21,22 +21,22 @@ API Should Support:
 [Install nodejs and npm on Ubuntu 16.04](https://websiteforstudents.com/install-the-latest-node-js-and-nmp-packages-on-ubuntu-16-04-18-04-lts/)
 
 ### Run Application
-The application listens on port 1337, so if you are using a vagrant box or any other virtual machine, keep port 1337 open. Express will run on that port.
+The application listens on port 1337, so if you are using a vagrant box or any other virtual machine, keep port 1337 open. Express will run on that port. </ br>
 
-`$ git clone https://github.com/nickolasteixeira/Eaze_BackEnd_Challenge.git`
-`$ cd Eaze_BackEnd_Challenge`
-`$ npm install`
-`$ npm run dev`
+`$ git clone https://github.com/nickolasteixeira/Eaze_BackEnd_Challenge.git` </br >
+`$ cd Eaze_BackEnd_Challenge` </br >
+`$ npm install` </br >
+`$ npm run dev` </br >
 
 Open a new window to run operations. The data is persisting in a file called `posts.json`. It's located in the `./data/` folder at the root of the project. Anytime you run an operation in a new window, the data in `posts.json` is either read or updated.
 
-To show all the current surveys, run:
+To show all the current surveys, run: </br>
 `$ ./operations/showall.js`
 
-To show an individual survey, run:
+To show an individual survey, run: </br >
 `$ ./operations/showById.js`
 
-To create a survey, run:
+To create a survey, run: </br >
 `$ ./operations/createsurvey.js` or to get a command that you can manually post use the bash script -> `$ ./operations/create.sh`
 
 To take a survey, run:
