@@ -1,23 +1,32 @@
 #!/usr/bin/nodejs
 const helper = require('../helpers/helper.js')
-const readline = require('readline')
 const fetch = require('node-fetch')
 const readlineSync = require('readline-sync')
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
 
-rl.question('Please enter the Survey ID number.\nIf you do not have it, please type "no": ', (answer) => {
-  if (answer === "no")
-      console.log('Please find the ID of the Survey you want to update by running the ./operations/show.js file')
-  else 
-      updateSurvey(answer)
-  rl.close()
-})
+function askForSurvey() {
+    console.log('-------------------- ** ----------------------------')
+    let survey_id = readlineSync.question('Please enter the Survey ID number.\nIf you do not have it, please type "no"\nSurvey ID: ')
+    console.log('-------------------- ** ----------------------------')
+    process.stdout.write('\n\n')
 
-function getSurvey(id) {
+    if (survey_id === "no") 
+        printFindId()
+    else 
+        updateSurvey(survey_id)
+}
+
+
+function printFindId() {
+    console.log('-------------------- ** ----------------------------')
+    console.log('Please find the ID of the Survey you want to update by running the ./operations/show.js file')
+    console.log('-------------------- ** ----------------------------')
+}
+
+askForSurvey()
+
+
+function getSurveyById(id) {
     return new Promise((resolve, reject) => {
         let url = 'http://localhost:1337/api/v1/posts/' + id
         let params = {
@@ -35,6 +44,12 @@ function getSurvey(id) {
 function transformSurvey(post) {
     return new Promise((resolve, reject) => {
         let survey = post.survey
+        /* Check for valid id */
+        if (survey === undefined) {
+            reject(post)
+            printFindId()
+        }
+        /* loop through survey and answer questsion */ 
         for (let i = 0; i < survey.length; i++) {
             answer = readlineSync.question(`${survey[i].question} (y/n): `).toLowerCase()
             answer = (answer === 'y' ? true : false)
@@ -46,9 +61,11 @@ function transformSurvey(post) {
 
 function checkStatus(res) {
     if (res.status === 200) {
+        process.stdout.write('\n\n')
         console.log('-------------------- ** ----------------------------') 
         console.log('            Survey succesfully saved                ')
         console.log('-------------------- ** ----------------------------') 
+        process.stdout.write('\n\n')
     } else {
         console.log(response.statusText)
     }
@@ -69,12 +86,25 @@ function postSurvey(post) {
     }) 
 }
 
-
 function updateSurvey(id) {
- 
-    getSurvey(id)
+    let int_id = parseInt(id, 10)
+    if (isNaN(int_id)) {
+        console.log(`${id} is not a valid integer`)
+        return
+    }
+  
+    getSurveyById(id)
     .then(post => transformSurvey(post))
     .then(post => postSurvey(post))
     .catch(err => console.log(err))
 }
 
+module.exports = {
+    updateSurvey,
+    postSurvey,
+    checkStatus,
+    transformSurvey,
+    getSurveyById,
+    printFindId,
+    askForSurvey
+}       
