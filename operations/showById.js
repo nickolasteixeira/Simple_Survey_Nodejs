@@ -9,12 +9,12 @@ const helper = require('./helpers/helpers')
   * @param - N/A
   * @return - N/A
 */
-async function showSurveyById() {
-    await helper.getAllSurveys()
+async function showSurveyById () {
+  await helper.getAllSurveys()
     .then(post => helper.listAllSurveys(post))
     .catch(err => console.log(err))
 
-    await helper.askForSurvey()
+  await helper.askForSurvey()
     .then(id => helper.getSurveyById(id))
     .then(post => helper.printSurvey(post))
     .catch(err => console.log(err))

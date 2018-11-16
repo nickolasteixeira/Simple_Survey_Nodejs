@@ -9,15 +9,14 @@ const helper = require('./helpers/helpers')
   * @param - N/A
   * @return - N/A
 */
-async function askForSurvey() {
-    /* list all surveys */
-    await helper.getAllSurveys()
+async function askForSurvey () {
+  /* list all surveys */
+  await helper.getAllSurveys()
     .then(post => helper.listAllSurveys(post))
     .catch(err => console.log(err))
-   
-    /* displays prompt to get surveys */
-    await helper.displayUpdatePrompt()
+
+  /* displays prompt to get surveys */
+  await helper.displayUpdatePrompt()
 }
 
 askForSurvey()
-

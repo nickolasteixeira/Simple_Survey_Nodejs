@@ -9,9 +9,9 @@ const helpers = require('./helpers/helpers')
   * @param - N/A
   * @return - N/A
 */
-function showAllSurveys() { 
-    helpers.getAllSurveys()
-    .then(data=> helpers.formatSurvey(data))
+function showAllSurveys () {
+  helpers.getAllSurveys()
+    .then(data => helpers.formatSurvey(data))
     .catch((err) => console.log(err))
 }
 
