@@ -2,8 +2,6 @@
 /*
 Module that shows all surveys by and Id from ../data/post.json
 */
-const fetch = require('node-fetch')
-const readlineSync = require('readline-sync')
 const helper = require('./helpers/helpers')
 
 /**

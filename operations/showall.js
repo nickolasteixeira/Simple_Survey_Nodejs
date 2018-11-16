@@ -2,7 +2,6 @@
 /*
 Module that shows all surveys currently in ../data/post.json
 */
-const fetch = require('node-fetch')
 const helpers = require('./helpers/helpers')
 
 /**

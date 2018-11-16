@@ -1,5 +1,7 @@
 #!/usr/bin/nodejs
-const readlineSync = require('readline-sync')
+/*
+Module that allows users to take a survey
+*/
 const helper = require('./helpers/helpers')
 
 /**
