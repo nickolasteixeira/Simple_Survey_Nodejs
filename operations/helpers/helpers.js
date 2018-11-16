@@ -239,7 +239,7 @@ async function displayCreatePrompt() {
 
     if (answer === 'y') {
         await askTitle()
-        .then(post => askQuestions(post))
+        .then(title => askQuestions(title))
         .then(post => askTags(post))
         .then(post => postSurvey(post))
         .catch(err => console.log(err))
@@ -279,11 +279,11 @@ function postSurvey(post) {
   * @param - string $post - a string with the title
   * @return - array $post - an array with the title 
 */
-function askTitle(post) {
+function askTitle(title) {
     return new Promise((resolve, reject) => {
         let title = ''
         title += readlineSync.question('What is the title of your survey?: ')
-        resolve([post])
+        resolve([title])
     })
 }
 
