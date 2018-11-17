@@ -47,3 +47,7 @@ To take a survey, run: </br >
 ## Data Persistence in Production:
 
 If this was a simple application that needed to store information over an indefinite period of time, I would store the information in a database. You could use a SQL or muscle type database, but in my opinion, I think it would make more sense to use a muscle storage like MongoDB that stores objects which closely resemble our surveys. I've never used MongoDB before, but it doesn't seem too hard to [set up](https://www.mongodb.com/cloud/atlas) on servers.
+
+## Bugs
+* When running the `$ ./operations/create.sh` file, if you type in an apostrophe in the title name, when you post the command on the command line, it will not work.
+* When running the `$ ./operations/create.sh` file, you can add more than 5 tags and questions.
