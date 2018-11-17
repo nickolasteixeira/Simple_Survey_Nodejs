@@ -38,8 +38,7 @@ To show an individual survey, run: </br >
 
 To create a survey, run: </br >
 `$ ./operations/createsurvey.js` </br > 
-or </br >
-to get a command that you can manually post use the bash script -> `$ ./operations/create.sh` </br >
+or to get a command that you can manually post use the bash script -> `$ ./operations/create.sh` </br >
 
 To take a survey, run: </br >
 `$ ./operations/takesurvey.js`
