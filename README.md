@@ -23,8 +23,8 @@ API Should Support:
 ### Run Application
 The application listens on port 1337, so if you are using a vagrant box or any other virtual machine, keep port 1337 open. Express will run on that port. </ br>
 
-`$ git clone https://github.com/nickolasteixeira/Eaze_BackEnd_Challenge.git` </br >
-`$ cd Eaze_BackEnd_Challenge` </br >
+`$ git clone https://github.com/nickolasteixeira/Simple_Survey_Nodejs.git` </br >
+`$ cd Simple_Survey_Nodejs` </br >
 `$ npm install` </br >
 `$ npm run dev` </br >
 
