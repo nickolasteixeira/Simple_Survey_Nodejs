@@ -12,7 +12,7 @@ API Should Support:
 ## Instructions to run application
 
 ### Environment
-* Ubuntu 16.06 - Linux
+* Ubuntu 16.04 - Linux
 * nodejs -version v8.12.0
 * npm -version 6.4.1
 
